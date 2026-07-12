@@ -1,0 +1,22 @@
+{
+    "package": "org.mozilla.firefox",
+
+    "name": "Firefox ESR",
+
+    "developer": "Mozilla",
+
+    "min_android": 5,
+
+    "max_android": 8,
+
+    "abi": [
+        "armeabi-v7a",
+        "arm64-v8a"
+    ],
+
+    "ram_min": 1024,
+
+    "recommended": true,
+
+    "category": "browser"
+}

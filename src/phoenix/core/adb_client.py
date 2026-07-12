@@ -35,4 +35,12 @@ class ADBClient:
                 devices.append(line.split()[0])
 
         return devices
-        
+
+    def shell(self, command: str) -> str:
+        """Run an adb shell command."""
+        result = self.run("shell", command)
+        return result.stdout.strip()
+
+    def getprop(self, prop: str) -> str:
+        """Read a single Android system property."""
+        return self.shell(f"getprop {prop}")

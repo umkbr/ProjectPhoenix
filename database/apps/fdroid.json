@@ -1,0 +1,23 @@
+{
+    "package": "org.fdroid.fdroid",
+
+    "name": "F-Droid",
+
+    "developer": "F-Droid",
+
+    "min_android": 4,
+
+    "max_android": 15,
+
+    "abi": [
+        "armeabi-v7a",
+        "arm64-v8a",
+        "x86"
+    ],
+
+    "ram_min": 512,
+
+    "recommended": true,
+
+    "category": "store"
+}

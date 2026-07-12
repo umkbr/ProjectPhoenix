@@ -1,0 +1,16 @@
+[
+  "tests/test_adb_client.py::test_adb_object",
+  "tests/test_adb_client.py::test_devices_returns_list",
+  "tests/test_adb_client.py::test_is_available",
+  "tests/test_device_knowledge.py::test_padfone_database",
+  "tests/test_device_service.py::test_no_device",
+  "tests/test_device_service.py::test_read_without_device",
+  "tests/test_device_service.py::test_service_created",
+  "tests/test_doctor.py::test_adb",
+  "tests/test_doctor.py::test_git",
+  "tests/test_doctor.py::test_python_version",
+  "tests/test_inspection_engine.py::test_engine",
+  "tests/test_memory_parser.py::test_parser",
+  "tests/test_package_analyzer.py::test_webstorage",
+  "tests/test_storage_parser.py::test_parser"
+]

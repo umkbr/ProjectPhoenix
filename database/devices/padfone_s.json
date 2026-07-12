@@ -1,0 +1,13 @@
+{
+    "device": "ASUS_T00N",
+    "marketing_name": "ASUS PadFone S PF500KL",
+    "manufacturer": "ASUSTeK",
+    "soc": "Qualcomm Snapdragon 801 MSM8974AC",
+    "cpu": "Quad Core Krait 400",
+    "gpu": "Adreno 330",
+    "ram_mb": 2048,
+    "storage_gb": 16,
+    "android_max": "6.0.1",
+    "kernel": "3.4.0",
+    "architecture": "armeabi-v7a"
+}

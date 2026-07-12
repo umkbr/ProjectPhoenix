@@ -1,0 +1,21 @@
+{
+    "package": "org.schabi.newpipe",
+
+    "name": "NewPipe Legacy",
+
+    "developer": "NewPipe",
+
+    "min_android": 4,
+
+    "max_android": 8,
+
+    "abi": [
+        "armeabi-v7a"
+    ],
+
+    "ram_min": 1024,
+
+    "recommended": true,
+
+    "category": "video"
+}

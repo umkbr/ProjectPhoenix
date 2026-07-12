@@ -1,0 +1,28 @@
+[
+    {
+        "package":"com.asus.webstorage",
+        "name":"ASUS WebStorage",
+        "safe_disable":true,
+        "priority":5
+    },
+    {
+        "package":"com.asus.zencircle",
+        "name":"ZenCircle",
+        "safe_disable":true,
+        "priority":4
+    },
+    {
+        "package":"com.asus.backuprestore",
+        "name":"Backup Restore",
+        "safe_disable":true,
+        "priority":3
+     },
+     {
+    "package": "com.asus.weathertime",
+    "name": "Weather",
+    "category": "widget",
+    "safe_disable": true,
+    "priority": 2,
+    "reason": "Optional weather widget"
+  }
+]

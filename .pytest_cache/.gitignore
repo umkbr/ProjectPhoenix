@@ -1,0 +1,15 @@
+# Python build
+*.egg-info/
+.eggs/
+
+# Distribution
+dist/
+build/
+
+# Virtual Environment
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+.pytest_cache/

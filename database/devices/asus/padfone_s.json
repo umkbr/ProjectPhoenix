@@ -1,0 +1,59 @@
+{
+    "manufacturer": "ASUS",
+    "brand": "ASUS",
+    "model": "ASUS_T00N",
+    "marketing_name": "ASUS PadFone S",
+
+    "codename": "T00N",
+
+    "release_year": 2014,
+
+    "soc": {
+        "name": "Qualcomm Snapdragon 801",
+        "model": "MSM8974AC",
+        "cpu": "Quad-core Krait 400 2.5 GHz",
+        "gpu": "Adreno 330",
+        "architecture": "armeabi-v7a",
+        "kernel": "3.4"
+    },
+
+    "memory": {
+        "ram_mb": 2048,
+        "storage_gb": 16
+    },
+
+    "display": {
+        "size": 5.0,
+        "resolution": "1920x1080",
+        "density": 441
+    },
+
+    "android": {
+        "launch": "4.4.2",
+        "latest_official": "6.0.1",
+        "api_level": 23
+    },
+
+    "bootloader": {
+        "unlock_supported": true,
+        "method": "Official ASUS Unlock Tool"
+    },
+
+    "recovery": {
+        "twrp": true,
+        "orangefox": false
+    },
+
+    "root": {
+        "magisk": false,
+        "supersu": true
+    },
+
+    "development": {
+        "kernel_source": true,
+        "lineageos": true,
+        "custom_rom": true
+    },
+
+    "status": "legacy"
+}

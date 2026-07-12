@@ -1,0 +1,19 @@
+Current Battery Service state:
+  AC powered: false
+  USB powered: true
+  Wireless powered: false
+  Max charging current: 500000
+  status: 2
+  health: 2
+  soh: 0
+  present: true
+  level: 97
+  scale: 100
+  voltage: 4342
+  pad AC powered: false
+  pad status: 1
+  pad level: -1
+  pad present: false
+  temperature: 245
+  technology: Li-poly
+usb otg:false
