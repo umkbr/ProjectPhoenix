@@ -30,6 +30,7 @@ src/phoenix/debloat/__init__.py
 src/phoenix/debloat/debloat_engine.py
 src/phoenix/doctor/doctor_engine.py
 src/phoenix/executor/__init__.py
+src/phoenix/executor/adb_executor.py
 src/phoenix/executor/command_builder.py
 src/phoenix/executor/debloat_executor.py
 src/phoenix/health/health_engine.py
@@ -74,6 +75,7 @@ src/project_phoenix.egg-info/dependency_links.txt
 src/project_phoenix.egg-info/entry_points.txt
 src/project_phoenix.egg-info/top_level.txt
 tests/test_adb_client.py
+tests/test_adb_executor.py
 tests/test_app_advisor.py
 tests/test_app_catalog.py
 tests/test_app_score.py
@@ -82,8 +84,10 @@ tests/test_capability_engine.py
 tests/test_command_builder.py
 tests/test_compatibility_engine.py
 tests/test_debloat_actions.py
+tests/test_debloat_cli.py
 tests/test_debloat_engine.py
 tests/test_debloat_executor.py
+tests/test_debloat_recommendation.py
 tests/test_device_knowledge.py
 tests/test_device_service.py
 tests/test_doctor.py

@@ -5,15 +5,24 @@ from phoenix.health.health_engine import HealthEngine
 from phoenix.inventory.inventory_engine import InventoryEngine
 from phoenix.report.report_engine import ReportEngine
 from phoenix.recommendation.recommendation_engine import RecommendationEngine
+from phoenix.debloat.debloat_engine import DebloatEngine
+from phoenix.executor.adb_executor import ADBExecutor
+
 
 def inspect():
+
     report = InspectionEngine().inspect()
+
     print(report)
 
 
 def doctor():
+
     inspection = InspectionEngine().inspect()
-    health = HealthEngine().evaluate(inspection)
+
+    health = HealthEngine().evaluate(
+        inspection
+    )
 
     output = ReportEngine().render(
         model=inspection.device.model,
@@ -60,6 +69,7 @@ def inventory():
     for app in keep[:15]:
         print(f"✔ {app.name}")
 
+
 def recommend():
 
     inspection = InspectionEngine().inspect()
@@ -78,10 +88,66 @@ def recommend():
     print()
 
     for app in recommendations:
+
         print(
             f"✔ {app.name} "
             f"(Score {app.score})"
         )
+
+
+def debloat(apply=False):
+
+    apps = InventoryEngine().scan()
+
+    engine = DebloatEngine()
+
+    safe_apps = engine.recommend(apps)
+
+    commands = engine.commands(apps)
+
+    print()
+    print("=" * 40)
+    print("PROJECT PHOENIX")
+    print("=" * 40)
+
+    print()
+
+    if not apply:
+
+        print("PREVIEW MODE")
+        print()
+
+        print(
+            f"{len(commands)} commands will be executed."
+        )
+
+        print()
+
+        for command in commands:
+
+            print(command)
+
+        print()
+        print(
+            "Run again with --apply to execute."
+        )
+
+        return
+
+    print("EXECUTING...")
+    print()
+
+    executor = ADBExecutor()
+
+    executor.run_many(commands)
+
+    for app in safe_apps:
+
+        print(f"✔ {app.name}")
+
+    print()
+    print("Done.")
+
 
 def main():
 
@@ -91,7 +157,9 @@ def main():
     )
 
     parser.add_argument(
+
         "command",
+
         choices=[
             "inspect",
             "battery",
@@ -99,33 +167,58 @@ def main():
             "storage",
             "doctor",
             "inventory",
-            "recommend"
+            "recommend",
+            "debloat",
         ]
+    )
+
+    parser.add_argument(
+
+        "--apply",
+
+        action="store_true",
+
+        help="Execute generated commands"
+
     )
 
     args = parser.parse_args()
 
     if args.command == "inspect":
+
         inspect()
 
     elif args.command == "doctor":
+
         doctor()
 
     elif args.command == "inventory":
+
         inventory()
 
+    elif args.command == "recommend":
+
+        recommend()
+
+    elif args.command == "debloat":
+
+        debloat(
+            apply=args.apply
+        )
+
     elif args.command == "battery":
+
         print("Battery module coming soon")
 
     elif args.command == "memory":
+
         print("Memory module coming soon")
 
     elif args.command == "storage":
+
         print("Storage module coming soon")
-   
-    elif args.command == "recommend":
-        recommend()
 
 
 if __name__ == "__main__":
+
     main()
