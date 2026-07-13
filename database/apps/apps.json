@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Firefox ESR",
+    "package": "org.mozilla.firefox",
+    "version": "115.28.0esr",
+    "min_android": 5,
+    "max_android": 8,
+    "abi": ["armeabi-v7a"],
+    "ram_min": 1024,
+    "source": "Mozilla Archive"
+  },
+  {
+    "name": "F-Droid",
+    "package": "org.fdroid.fdroid",
+    "version": "1.23",
+    "min_android": 4.4,
+    "max_android": 15,
+    "abi": ["armeabi-v7a"],
+    "ram_min": 512,
+    "source": "F-Droid"
+  },
+  {
+    "name": "NewPipe Legacy",
+    "package": "org.schabi.newpipe",
+    "version": "0.27.6",
+    "min_android": 5,
+    "max_android": 8,
+    "abi": ["armeabi-v7a"],
+    "ram_min": 1024,
+    "source": "GitHub"
+  }
+]
