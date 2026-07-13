@@ -1,12 +1,17 @@
 class CommandBuilder:
 
-    def disable(
-        self,
-        package: str,
-    ) -> str:
+    def disable(self, package):
 
         return (
-            f"adb shell pm disable-user {package}"
+            f"pm disable-user --user 0 "
+            f"{package}"
+        )
+
+    def enable(self, package):
+
+        return (
+            f"pm enable "
+            f"{package}"
         )
 
     def uninstall(
@@ -15,5 +20,6 @@ class CommandBuilder:
     ) -> str:
 
         return (
-            f"adb shell pm uninstall --user 0 {package}"
+            f"pm uninstall --user 0 "
+            f"{package}"
         )

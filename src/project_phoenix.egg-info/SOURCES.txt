@@ -11,6 +11,9 @@ src/phoenix/analyzer/recovery_analyzer.py
 src/phoenix/analyzer/scoring.py
 src/phoenix/analyzer/system_analyzer.py
 src/phoenix/api/device.py
+src/phoenix/backup/__init__.py
+src/phoenix/backup/backup_manager.py
+src/phoenix/backup/restore_manager.py
 src/phoenix/capability/capability_engine.py
 src/phoenix/compatibility/__init__.py
 src/phoenix/compatibility/compatibility_engine.py
@@ -28,6 +31,7 @@ src/phoenix/debloat/debloat_engine.py
 src/phoenix/doctor/doctor_engine.py
 src/phoenix/executor/__init__.py
 src/phoenix/executor/command_builder.py
+src/phoenix/executor/debloat_executor.py
 src/phoenix/health/health_engine.py
 src/phoenix/intelligence/__init__.py
 src/phoenix/intelligence/device_classifier.py
@@ -54,7 +58,10 @@ src/phoenix/pipeline/__init__.py
 src/phoenix/pipeline/pipeline.py
 src/phoenix/recommendation/recommendation_engine.py
 src/phoenix/report/__init__.py
+src/phoenix/report/inventory_formatter.py
 src/phoenix/report/report_engine.py
+src/phoenix/restore/__init__.py
+src/phoenix/restore/restore_manager.py
 src/phoenix/services/battery_service.py
 src/phoenix/services/device_service.py
 src/phoenix/services/installed_app_service.py
@@ -70,11 +77,13 @@ tests/test_adb_client.py
 tests/test_app_advisor.py
 tests/test_app_catalog.py
 tests/test_app_score.py
+tests/test_backup_manager.py
 tests/test_capability_engine.py
 tests/test_command_builder.py
 tests/test_compatibility_engine.py
 tests/test_debloat_actions.py
 tests/test_debloat_engine.py
+tests/test_debloat_executor.py
 tests/test_device_knowledge.py
 tests/test_device_service.py
 tests/test_doctor.py
@@ -83,6 +92,7 @@ tests/test_health_engine.py
 tests/test_inspection_engine.py
 tests/test_installed_app_service.py
 tests/test_intelligence_engine.py
+tests/test_inventory_cli.py
 tests/test_inventory_engine.py
 tests/test_memory_parser.py
 tests/test_package_analyzer.py
@@ -90,5 +100,7 @@ tests/test_package_service.py
 tests/test_pipeline.py
 tests/test_recommendation_engine.py
 tests/test_report_engine.py
+tests/test_restore_executor.py
+tests/test_restore_manager.py
 tests/test_storage_parser.py
 tests/test_system_analyzer.py

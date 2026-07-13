@@ -1,5 +1,6 @@
 from phoenix.database.package_database import PackageDatabase
 from phoenix.models.installed_app import InstalledApp
+from phoenix.services.package_service import PackageService
 
 
 class InventoryEngine:
@@ -7,6 +8,13 @@ class InventoryEngine:
     def __init__(self):
 
         self.database = PackageDatabase()
+        self.package_service = PackageService()
+
+    def scan(self):
+
+        packages = self.package_service.read()
+
+        return self.build(packages)
 
     def build(self, packages):
 
@@ -23,7 +31,10 @@ class InventoryEngine:
                         package=package,
                         name=info["name"],
                         vendor="ASUS",
-                        category=info.get("category", "unknown"),
+                        category=info.get(
+                            "category",
+                            "unknown",
+                        ),
                         installed=True,
                         safe_disable=info["safe_disable"],
                     )

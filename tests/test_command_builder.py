@@ -12,7 +12,7 @@ def test_disable_command():
     assert (
         cmd
         ==
-        "adb shell pm disable-user com.asus.webstorage"
+        "pm disable-user --user 0 com.asus.webstorage"
     )
 
 
@@ -27,5 +27,5 @@ def test_uninstall_command():
     assert (
         cmd
         ==
-        "adb shell pm uninstall --user 0 com.asus.webstorage"
+        "pm uninstall --user 0 com.asus.webstorage"
     )
