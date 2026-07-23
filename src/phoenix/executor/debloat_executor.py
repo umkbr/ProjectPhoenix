@@ -1,4 +1,5 @@
 from phoenix.executor.command_builder import CommandBuilder
+from phoenix.adb.adb_executor import ADBExecutor
 
 
 class DebloatExecutor:
@@ -6,6 +7,7 @@ class DebloatExecutor:
     def __init__(self):
 
         self.builder = CommandBuilder()
+        self.executor = ADBExecutor()
 
     def disable(self, package):
 
@@ -21,4 +23,12 @@ class DebloatExecutor:
 
     def execute(self, commands):
 
-        return commands
+        results = []
+
+        for command in commands:
+
+            results.append(
+                self.executor.execute(command)
+            )
+
+        return results

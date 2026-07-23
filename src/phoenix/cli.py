@@ -7,7 +7,8 @@ from phoenix.report.report_engine import ReportEngine
 from phoenix.recommendation.recommendation_engine import RecommendationEngine
 from phoenix.debloat.debloat_engine import DebloatEngine
 from phoenix.executor.adb_executor import ADBExecutor
-
+from phoenix.history.history_manager import HistoryManager
+from phoenix.status.status_manager import StatusManager
 
 def inspect():
 
@@ -148,6 +149,83 @@ def debloat(apply=False):
     print()
     print("Done.")
 
+def history():
+
+    manager = HistoryManager()
+
+    items = manager.list()
+
+    print()
+    print("=" * 40)
+    print("TRANSACTION HISTORY")
+    print("=" * 40)
+
+    print()
+
+    for item in items:
+
+        print(item["id"])
+        print(
+            f"Packages : {item['packages']}"
+        )
+        print(
+            f"Success  : {item['success']}"
+        )
+        print("-" * 40)
+
+def status():
+
+    manager = StatusManager()
+
+    items = manager.status()
+
+    print()
+    print("=" * 40)
+    print("PACKAGE STATUS")
+    print("=" * 40)
+    print()
+
+    for item in items[:25]:
+
+        icon = "✖" if item["disabled"] else "✔"
+
+        state = (
+            "Disabled"
+            if item["disabled"]
+            else "Enabled"
+        )
+
+        print(
+            f"{icon} "
+            f"{item['name']:<25} "
+            f"{state}"
+        )
+
+def update_device(self, report):
+
+    if report is None:
+
+        text = (
+            "Status : Disconnected\n"
+            "\n"
+            "No device detected."
+        )
+
+    else:
+
+        text = (
+            f"Status : Connected\n\n"
+            f"Model : {report.device.model}\n"
+            f"Android : {report.device.android_version}\n"
+            f"Serial : {report.device.serial}"
+        )
+
+    self.after(
+        0,
+        lambda: self.device_label.config(
+            text=text
+        )
+    )
 
 def main():
 
@@ -169,6 +247,8 @@ def main():
             "inventory",
             "recommend",
             "debloat",
+            "history",
+            "status",
         ]
     )
 
@@ -218,6 +298,11 @@ def main():
 
         print("Storage module coming soon")
 
+    elif args.command == "history":
+        history()
+    
+    elif args.command == "status":
+        status()
 
 if __name__ == "__main__":
 

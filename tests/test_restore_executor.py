@@ -12,4 +12,7 @@ def test_execute():
 
     result = executor.execute(commands)
 
-    assert result == commands
+    assert len(result) == 2
+
+    assert result[0].command == commands[0]
+    assert result[1].command == commands[1]

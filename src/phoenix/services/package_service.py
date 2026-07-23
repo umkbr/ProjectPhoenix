@@ -4,6 +4,7 @@ from phoenix.core.adb_client import ADBClient
 class PackageService:
 
     def __init__(self):
+
         self.adb = ADBClient()
 
     def read(self):
@@ -27,9 +28,26 @@ class PackageService:
 
         return packages
 
-    # kompatibilitas dengan kode lama
-    def list_packages(self):
-        return self.read()
+    def disabled(self):
+
+        output = self.adb.shell(
+            "pm list packages -d"
+        )
+
+        packages = []
+
+        for line in output.splitlines():
+
+            if line.startswith("package:"):
+
+                packages.append(
+                    line.replace(
+                        "package:",
+                        ""
+                    ).strip()
+                )
+
+        return packages
 
     def version(self, package):
 
@@ -49,3 +67,8 @@ class PackageService:
                 )
 
         return "Unknown"
+
+    # kompatibilitas
+    def list_packages(self):
+
+        return self.read()

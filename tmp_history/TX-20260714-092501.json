@@ -1,0 +1,8 @@
+[
+    {
+        "package": "com.asus.weather",
+        "command": "pm disable-user com.asus.weather",
+        "success": true,
+        "message": "OK"
+    }
+]

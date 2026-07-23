@@ -1,0 +1,8 @@
+[
+    {
+        "package": "com.test.app",
+        "command": "pm disable-user com.test.app",
+        "success": true,
+        "message": "OK"
+    }
+]
