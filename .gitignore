@@ -1,3 +1,31 @@
-__pycache__/
-*.pyc
+# Virtual Environment
 .venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build
+build/
+dist/
+*.spec
+
+# Editable install
+src/project_phoenix.egg-info/
+
+# IDE
+.vscode/
+.idea/
+
+# History
+tmp_history/
+
+# OS
+.DS_Store
+Thumbs.db
