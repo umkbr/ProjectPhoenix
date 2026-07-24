@@ -2,6 +2,7 @@ from PySide6.QtWidgets import (
     QWidget,
     QLabel,
     QVBoxLayout,
+    QHBoxLayout,
     QListWidget,
     QListWidgetItem,
     QPushButton,
@@ -17,7 +18,7 @@ class DebloatPage(QWidget):
 
         super().__init__()
 
-        layout = QVBoxLayout()
+        layout = QVBoxLayout(self)
 
         title = QLabel("Debloat")
 
@@ -36,18 +37,33 @@ class DebloatPage(QWidget):
 
         layout.addWidget(self.list)
 
-        self.preview_button = QPushButton(
-            "Preview Commands"
-        )
+        button_layout = QHBoxLayout()
 
-        layout.addWidget(self.preview_button)
+        self.select_all_button = QPushButton("Select All")
+        self.clear_button = QPushButton("Clear")
+        self.preview_button = QPushButton("Preview")
+        self.execute_button = QPushButton("Execute")
+
+        button_layout.addWidget(self.select_all_button)
+        button_layout.addWidget(self.clear_button)
+        button_layout.addStretch()
+        button_layout.addWidget(self.preview_button)
+        button_layout.addWidget(self.execute_button)
+
+        layout.addLayout(button_layout)
 
         layout.addStretch()
 
-        self.setLayout(layout)
-
         self.list.itemChanged.connect(
             self.update_counter
+        )
+
+        self.select_all_button.clicked.connect(
+            self.select_all
+        )
+
+        self.clear_button.clicked.connect(
+            self.clear_selection
         )
 
     def update_apps(self, apps):
@@ -82,9 +98,7 @@ class DebloatPage(QWidget):
 
             if item.checkState() == Qt.Checked:
 
-                apps.append(
-                    item.data(Qt.UserRole)
-                )
+                apps.append(item.data(Qt.UserRole))
 
         return apps
 
@@ -94,28 +108,61 @@ class DebloatPage(QWidget):
             f"Selected : {len(self.selected_apps())}"
         )
 
+    def select_all(self):
+
+        for row in range(self.list.count()):
+
+            self.list.item(row).setCheckState(
+                Qt.Checked
+            )
+
+        self.update_counter()
+
+    def clear_selection(self):
+
+        for row in range(self.list.count()):
+
+            self.list.item(row).setCheckState(
+                Qt.Unchecked
+            )
+
+        self.update_counter()
+
     def show_preview(self, commands):
 
         if not commands:
 
             QMessageBox.information(
-
                 self,
-
                 "Preview",
-
                 "No application selected.",
-
             )
 
             return
 
         QMessageBox.information(
-
             self,
-
             "Preview Commands",
-
             "\n".join(commands),
+        )
 
+    def show_result(self, tx_id, results):
+
+        total = len(results)
+        success = sum(
+            1 for r in results if r.success
+        )
+        failed = total - success
+
+        text = (
+            f"Transaction : {tx_id}\n\n"
+            f"Total      : {total}\n"
+            f"Success    : {success}\n"
+            f"Failed     : {failed}"
+        )
+
+        QMessageBox.information(
+            self,
+            "Execute Finished",
+            text,
         )
