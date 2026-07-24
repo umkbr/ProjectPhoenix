@@ -4,6 +4,8 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QGridLayout,
     QGroupBox,
+    QPushButton,
+    QHBoxLayout,
 )
 
 from phoenix.gui.widgets.info_card import InfoCard
@@ -55,6 +57,26 @@ class DashboardPage(QWidget):
         grid.addWidget(self.storage, 1, 1)
 
         layout.addLayout(grid)
+
+        action_layout = QHBoxLayout()
+
+        self.quick_optimize_button = QPushButton(
+            "⚡ Quick Optimize"
+        )
+
+        self.refresh_button = QPushButton(
+            "🔄 Refresh"
+        )
+
+        action_layout.addWidget(
+            self.quick_optimize_button
+        )
+
+        action_layout.addWidget(
+            self.refresh_button
+        )
+
+        layout.addLayout(action_layout)
 
         layout.addStretch()
 

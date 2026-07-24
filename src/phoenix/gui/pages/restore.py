@@ -1,4 +1,9 @@
-from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout
+from PySide6.QtWidgets import (
+    QWidget,
+    QVBoxLayout,
+    QListWidget,
+    QPushButton,
+)
 
 
 class RestorePage(QWidget):
@@ -9,19 +14,28 @@ class RestorePage(QWidget):
 
         layout = QVBoxLayout()
 
-        title = QLabel("Restore")
+        self.transactions = QListWidget()
 
-        title.setStyleSheet("""
-            font-size:28px;
-            font-weight:bold;
-        """)
-
-        layout.addWidget(title)
-
-        layout.addWidget(
-            QLabel("Restore disabled applications.")
+        self.restore_button = QPushButton(
+            "Restore Selected"
         )
 
-        layout.addStretch()
+        layout.addWidget(self.transactions)
+        layout.addWidget(self.restore_button)
 
         self.setLayout(layout)
+
+    def update_transactions(self, ids):
+
+        self.transactions.clear()
+
+        self.transactions.addItems(ids)
+
+    def selected_transaction(self):
+
+        item = self.transactions.currentItem()
+
+        if item is None:
+            return None
+
+        return item.text()

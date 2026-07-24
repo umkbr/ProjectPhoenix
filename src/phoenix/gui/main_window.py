@@ -40,6 +40,17 @@ from phoenix.gui.result_dialog import (
     ResultDialog,
 )
 
+from phoenix.history.history_manager import (
+    HistoryManager,
+)
+
+from phoenix.restore.restore_manager import (
+    RestoreManager,
+)
+
+from phoenix.gui.controllers.quick_optimize_controller import (
+    QuickOptimizeController,
+)
 
 class MainWindow(QWidget):
 
@@ -59,13 +70,25 @@ class MainWindow(QWidget):
         self.setup_ui()
         self.connect_navigation()
 
+        self.dashboard.refresh_button.clicked.connect(
+            self.refresh_device
+        )
 
+        self.dashboard.quick_optimize_button.clicked.connect(
+            self.quick_optimize
+        )
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.refresh_device)
         self.timer.start(2000)
 
         self.refresh_device()
+
+        self.restore.restore_button.clicked.connect(
+            self.restore_transaction
+        )
+
+        self.quick_controller = QuickOptimizeController()
 
     def setup_ui(self):
 
@@ -134,6 +157,10 @@ class MainWindow(QWidget):
             self.execute_debloat
         )
 
+        self.restore.restore_button.clicked.connect(
+            self.restore_transaction
+        )
+
     def refresh_device(self):
 
         try:
@@ -186,6 +213,12 @@ class MainWindow(QWidget):
             )
 
             self.history.refresh()
+
+            transactions = self.history_manager.list()
+
+            self.restore.update_transactions(
+                transactions
+            )
 
         except Exception:
 
@@ -274,3 +307,139 @@ class MainWindow(QWidget):
         dialog.exec()
 
         self.history.refresh()
+
+    def restore_transaction(self):
+
+        tx = self.restore.selected_transaction()
+
+        if tx is None:
+            return
+
+        backup = self.history_manager.load(tx)
+
+        if backup is None:
+            return
+
+        if not ConfirmationDialog.confirm(
+            self,
+            backup.results,
+        ):
+            return
+
+        progress = ProgressDialog(self)
+
+        progress.show()
+
+        self.repaint()
+
+        manager = RestoreManager(backup)
+
+        result = manager.execute()
+
+        progress.finish()
+
+        progress.close()
+
+        dialog = ResultDialog(
+
+            "Restore Result",
+
+            "\n".join(result),
+
+        )
+
+        dialog.exec()
+
+        self.refresh_device()
+
+    def quick_optimize(self):
+
+        apps = self.debloat_controller.load()
+
+        selected = []
+
+        for app in apps:
+
+            if getattr(app, "recommended", False):
+
+                selected.append(app)
+
+        if not selected:
+
+            ResultDialog(
+
+                "Quick Optimize",
+
+                "No recommended applications found.",
+
+            ).exec()
+
+            return
+
+        if not ConfirmationDialog.confirm(
+            self,
+            selected,
+        ):
+            return
+
+        progress = ProgressDialog(self)
+
+        progress.show()
+
+        self.repaint()
+
+        tx_id, results = self.debloat_controller.execute(
+            selected
+        )
+
+        progress.finish()
+
+        progress.close()
+
+        if tx_id is None:
+
+            return
+
+        ok = 0
+
+        failed = 0
+
+        lines = []
+
+        lines.append(
+            f"Transaction : {tx_id}"
+        )
+
+        lines.append("")
+
+        for item in results:
+
+            if item.success:
+
+                ok += 1
+
+            else:
+
+                failed += 1
+
+            status = "OK" if item.success else "FAILED"
+
+            lines.append(
+                f"[{status}] {item.package}"
+            )
+
+        lines.append("")
+        lines.append(f"Success : {ok}")
+        lines.append(f"Failed : {failed}")
+
+        ResultDialog(
+
+            "Quick Optimize",
+
+            "\n".join(lines),
+
+        ).exec()
+
+        self.history.refresh()
+
+        self.refresh_device()

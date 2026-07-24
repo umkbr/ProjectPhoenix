@@ -4,7 +4,7 @@ from PySide6.QtWidgets import QMessageBox
 class ConfirmationDialog:
 
     @staticmethod
-    def confirm(parent, apps):
+    def confirm(parent, items):
 
         if not apps:
             QMessageBox.information(
@@ -14,10 +14,18 @@ class ConfirmationDialog:
             )
             return False
 
-        names = "\n".join(
-            f"• {app.name}"
-            for app in apps
-        )
+        names = []
+
+        for item in items:
+
+            if hasattr(item, "name"):
+                names.append(item.name)
+
+            elif hasattr(item, "package"):
+                names.append(item.package)
+
+            else:
+                names.append(str(item))
 
         reply = QMessageBox.question(
             parent,

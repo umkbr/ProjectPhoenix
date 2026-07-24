@@ -1,4 +1,5 @@
 from phoenix.executor.command_builder import CommandBuilder
+from phoenix.executor.adb_executor import ADBExecutor
 
 
 class RestoreManager:
@@ -7,6 +8,7 @@ class RestoreManager:
 
         self.backup = backup
         self.builder = CommandBuilder()
+        self.executor = ADBExecutor()
 
     def restore(self):
 
@@ -21,3 +23,11 @@ class RestoreManager:
             )
 
         return commands
+
+    def execute(self):
+
+        commands = self.restore()
+
+        return self.executor.run_many(
+            commands
+        )
