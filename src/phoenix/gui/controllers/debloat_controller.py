@@ -1,5 +1,6 @@
 from phoenix.inventory.inventory_engine import InventoryEngine
 from phoenix.debloat.debloat_engine import DebloatEngine
+from phoenix.history.transaction_manager import TransactionManager
 
 
 class DebloatController:
@@ -8,6 +9,7 @@ class DebloatController:
 
         self.inventory = InventoryEngine()
         self.engine = DebloatEngine()
+        self.history = TransactionManager()
 
     def load(self):
 
@@ -17,4 +19,15 @@ class DebloatController:
 
     def preview(self, apps):
 
-        return self.engine.commands(apps)
+        return self.engine.preview(apps)
+
+    def execute(self, apps):
+
+        if not apps:
+            return None, []
+
+        results = self.engine.execute(apps)
+
+        transaction_id = self.history.save(results)
+
+        return transaction_id, results
