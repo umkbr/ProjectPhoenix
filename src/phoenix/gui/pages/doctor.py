@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
 
 from phoenix.gui.widgets.info_card import InfoCard
 
+from PySide6.QtWidgets import QFormLayout
 
 class DoctorPage(QWidget):
 
@@ -69,6 +70,51 @@ class DoctorPage(QWidget):
         self.status_box.setLayout(status_layout)
 
         layout.addWidget(self.status_box)
+
+        self.device_box = QGroupBox(
+            "Device Information"
+        )
+
+        device_layout = QFormLayout()
+
+        self.model_label = QLabel("--")
+        self.android_label = QLabel("--")
+        self.battery_label = QLabel("--")
+        self.memory_label = QLabel("--")
+        self.storage_label = QLabel("--")
+
+        device_layout.addRow(
+            "Model",
+            self.model_label,
+        )
+
+        device_layout.addRow(
+            "Android",
+            self.android_label,
+        )
+
+        device_layout.addRow(
+            "Battery",
+            self.battery_label,
+        )
+
+        device_layout.addRow(
+            "Memory",
+            self.memory_label,
+        )
+
+        device_layout.addRow(
+            "Storage",
+            self.storage_label,
+        )
+
+        self.device_box.setLayout(
+            device_layout
+        )
+
+        layout.addWidget(
+            self.device_box
+        )
 
         self.recommendation_box = QGroupBox("Recommendations")
 
@@ -155,3 +201,50 @@ class DoctorPage(QWidget):
                 f"• {recommendation.title}"
 
             )
+
+    def update_device_info(
+
+        self,
+
+        report,
+
+    ):
+
+        self.model_label.setText(
+
+            report.device.model
+
+        )
+
+        self.android_label.setText(
+
+            report.device.android_version
+
+        )
+
+        self.battery_label.setText(
+
+            f"{report.battery.level}%"
+
+        )
+
+        total = report.memory.total_kb // 1024
+
+        free = report.memory.available_kb // 1024
+
+        self.memory_label.setText(
+
+            f"{free} MB Free / {total} MB"
+
+        )
+
+        storage = report.storage[-1]
+
+        available = storage.available_kb // 1024
+
+        self.storage_label.setText(
+
+            f"{available} MB Free"
+
+        )
+    

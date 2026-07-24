@@ -179,6 +179,10 @@ class MainWindow(QWidget):
 
             self.doctor.update_report(health)
 
+            self.doctor.update_device_info(
+                report
+            )
+
             self.doctor.optimize_button.setEnabled(
                 True
             )
@@ -313,7 +317,11 @@ class MainWindow(QWidget):
             self.doctor.optimize_button.setEnabled(
                 False
             )
-
+            self.doctor.model_label.setText("--")
+            self.doctor.android_label.setText("--")
+            self.doctor.battery_label.setText("--")
+            self.doctor.memory_label.setText("--")
+            self.doctor.storage_label.setText("--")
     def preview_debloat(self):
 
         apps = self.debloat.selected_apps()
