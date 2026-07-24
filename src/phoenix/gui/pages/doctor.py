@@ -5,6 +5,7 @@ from PySide6.QtWidgets import (
     QListWidget,
     QPushButton,
     QGroupBox,
+    QGridLayout,
 )
 
 from phoenix.gui.widgets.info_card import InfoCard
@@ -30,6 +31,32 @@ class DoctorPage(QWidget):
         self.health = InfoCard("Health Score", "--")
 
         layout.addWidget(self.health)
+
+        grid = QGridLayout()
+
+        self.risk = InfoCard(
+            "Risk Level",
+            "--"
+        )
+
+        self.total_recommendations = InfoCard(
+            "Recommendations",
+            "0"
+        )
+
+        grid.addWidget(
+            self.risk,
+            0,
+            0
+        )
+
+        grid.addWidget(
+            self.total_recommendations,
+            0,
+            1
+        )
+
+        layout.addLayout(grid)
 
         self.status_box = QGroupBox("Device Status")
 
@@ -57,6 +84,14 @@ class DoctorPage(QWidget):
 
         self.refresh_button = QPushButton("Analyze Again")
 
+        self.optimize_button = QPushButton(
+            "⚡ Optimize Recommended Apps"
+        )
+
+        layout.addWidget(
+            self.optimize_button
+        )
+
         layout.addWidget(self.refresh_button)
 
         layout.addStretch()
@@ -65,16 +100,50 @@ class DoctorPage(QWidget):
 
     def update_report(self, health_report):
 
-        self.health.set_value(f"{health_report.score}/100")
+        self.health.set_value(
+            f"{health_report.score}/100"
+        )
 
-        self.status_label.setText(health_report.status)
+        self.status_label.setText(
+            health_report.status
+        )
+
+        if health_report.score >= 80:
+
+            risk = "🟢 Safe"
+
+        elif health_report.score >= 60:
+
+            risk = "🟡 Medium"
+
+        else:
+
+            risk = "🔴 Critical"
+
+        self.risk.set_value(risk)
+
+        self.total_recommendations.set_value(
+
+            str(
+
+                len(
+
+                    health_report.recommendations
+
+                )
+
+            )
+
+        )
 
         self.recommendation_list.clear()
 
         if not health_report.recommendations:
 
             self.recommendation_list.addItem(
+
                 "No recommendations."
+
             )
 
             return
@@ -82,5 +151,7 @@ class DoctorPage(QWidget):
         for recommendation in health_report.recommendations:
 
             self.recommendation_list.addItem(
+
                 f"• {recommendation.title}"
+
             )

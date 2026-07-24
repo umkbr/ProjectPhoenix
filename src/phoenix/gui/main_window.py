@@ -70,6 +70,14 @@ class MainWindow(QWidget):
         self.setup_ui()
         self.connect_navigation()
 
+        self.doctor.refresh_button.clicked.connect(
+            self.refresh_device
+        )
+
+        self.doctor.optimize_button.clicked.connect(
+            self.quick_optimize
+        )
+
         self.dashboard.refresh_button.clicked.connect(
             self.refresh_device
         )
@@ -170,6 +178,10 @@ class MainWindow(QWidget):
             health = self.health_engine.evaluate(report)
 
             self.doctor.update_report(health)
+
+            self.doctor.optimize_button.setEnabled(
+                True
+            )
 
             apps = self.inventory_controller.load()
 
@@ -294,6 +306,12 @@ class MainWindow(QWidget):
 
                 last_action="-",
 
+            )
+
+            self.dashboard.set_connected(False)
+
+            self.doctor.optimize_button.setEnabled(
+                False
             )
 
     def preview_debloat(self):
