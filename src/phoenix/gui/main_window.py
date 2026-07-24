@@ -28,6 +28,18 @@ from phoenix.gui.controllers.debloat_controller import (
     DebloatController,
 )
 
+from phoenix.gui.dialogs.confirmation_dialog import (
+    ConfirmationDialog,
+)
+
+from phoenix.gui.dialogs.progress_dialog import (
+    ProgressDialog,
+)
+
+from phoenix.gui.result_dialog import (
+    ResultDialog,
+)
+
 
 class MainWindow(QWidget):
 
@@ -46,6 +58,8 @@ class MainWindow(QWidget):
 
         self.setup_ui()
         self.connect_navigation()
+
+
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.refresh_device)
@@ -114,6 +128,10 @@ class MainWindow(QWidget):
 
         self.debloat.preview_button.clicked.connect(
             self.preview_debloat
+        )
+
+        self.debloat.execute_button.clicked.connect(
+            self.execute_debloat
         )
 
     def refresh_device(self):
@@ -212,3 +230,43 @@ class MainWindow(QWidget):
         commands = self.debloat_controller.preview(apps)
 
         self.debloat.show_preview(commands)
+
+    def execute_debloat(self):
+
+        apps = self.debloat.selected_apps()
+
+        if not ConfirmationDialog.confirm(self, apps):
+            return
+
+        progress = ProgressDialog(self)
+        progress.show()
+
+        self.repaint()
+
+        tx_id, results = self.debloat_controller.execute(apps)
+
+        progress.finish()
+        progress.close()
+
+        if tx_id is None:
+            return
+
+        text = []
+
+        text.append(f"Transaction : {tx_id}")
+        text.append("")
+
+        for item in results:
+
+            status = "OK" if item.success else "FAILED"
+
+            text.append(
+                f"[{status}] {item.package}"
+            )
+
+        dialog = ResultDialog(
+            "Debloat Result",
+            "\n".join(text),
+        )
+
+        dialog.exec()
