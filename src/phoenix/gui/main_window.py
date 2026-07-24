@@ -185,6 +185,8 @@ class MainWindow(QWidget):
 
             )
 
+            self.history.refresh()
+
         except Exception:
 
             self.inventory.update_inventory([])
@@ -270,3 +272,5 @@ class MainWindow(QWidget):
         )
 
         dialog.exec()
+
+        self.history.refresh()

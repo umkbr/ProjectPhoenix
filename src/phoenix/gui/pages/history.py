@@ -1,4 +1,11 @@
-from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout
+from PySide6.QtWidgets import (
+    QWidget,
+    QVBoxLayout,
+    QListWidget,
+    QTextEdit,
+)
+
+from phoenix.history.history_manager import HistoryManager
 
 
 class HistoryPage(QWidget):
@@ -7,21 +14,57 @@ class HistoryPage(QWidget):
 
         super().__init__()
 
+        self.manager = HistoryManager()
+
         layout = QVBoxLayout()
 
-        title = QLabel("History")
+        self.transactions = QListWidget()
 
-        title.setStyleSheet("""
-            font-size:28px;
-            font-weight:bold;
-        """)
+        self.detail = QTextEdit()
+        self.detail.setReadOnly(True)
 
-        layout.addWidget(title)
-
-        layout.addWidget(
-            QLabel("History will appear here.")
-        )
-
-        layout.addStretch()
+        layout.addWidget(self.transactions)
+        layout.addWidget(self.detail)
 
         self.setLayout(layout)
+
+        self.transactions.currentTextChanged.connect(
+            self.load_transaction
+        )
+
+        self.refresh()
+
+    def refresh(self):
+
+        self.transactions.clear()
+
+        for tx in self.manager.list():
+
+            self.transactions.addItem(tx)
+
+    def load_transaction(self, tx_id):
+
+        if not tx_id:
+            return
+
+        transaction = self.manager.load(tx_id)
+
+        if transaction is None:
+            return
+
+        lines = []
+
+        lines.append(f"Transaction : {transaction.id}")
+        lines.append("")
+
+        for item in transaction.results:
+
+            status = "OK" if item.success else "FAILED"
+
+            lines.append(
+                f"[{status}] {item.package}"
+            )
+
+        self.detail.setPlainText(
+            "\n".join(lines)
+        )
