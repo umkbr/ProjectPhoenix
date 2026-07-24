@@ -51,10 +51,45 @@ class DashboardPage(QWidget):
 
         self.storage = ProgressCard("Storage")
 
+        self.total_apps = InfoCard(
+            "Installed Apps",
+            "--"
+        )
+
+        self.recommended_apps = InfoCard(
+            "Recommended",
+            "--"
+        )
+
+        self.last_action = InfoCard(
+            "Last Optimization",
+            "-"
+        )
+
         grid.addWidget(self.health, 0, 0)
         grid.addWidget(self.battery, 0, 1)
         grid.addWidget(self.memory, 1, 0)
         grid.addWidget(self.storage, 1, 1)
+
+        grid.addWidget(
+            self.total_apps,
+            2,
+            0
+        )
+
+        grid.addWidget(
+            self.recommended_apps,
+            2,
+            1
+        )
+
+        grid.addWidget(
+            self.last_action,
+            3,
+            0,
+            1,
+            2
+        )
 
         layout.addLayout(grid)
 
@@ -110,4 +145,44 @@ class DashboardPage(QWidget):
         self.storage.update_value(
             storage_text,
             storage_percent,
+        )
+
+    def update_statistics(
+
+        self,
+
+        installed,
+
+        recommended,
+
+        last_action,
+
+    ):
+
+        self.total_apps.set_value(
+            str(installed)
+        )
+
+        self.recommended_apps.set_value(
+            str(recommended)
+        )
+
+        self.last_action.set_value(
+            last_action
+        )
+
+    def set_connected(
+
+        self,
+
+        connected,
+
+    ):
+
+        self.quick_optimize_button.setEnabled(
+            connected
+        )
+
+        self.refresh_button.setEnabled(
+            True
         )

@@ -177,6 +177,18 @@ class MainWindow(QWidget):
 
             debloat_apps = self.debloat_controller.load()
 
+            recommended = 0
+
+            for app in debloat_apps:
+
+                if getattr(
+                    app,
+                    "recommended",
+                    False,
+                ):
+
+                    recommended += 1
+
             self.debloat.update_apps(debloat_apps)
 
             storage = report.storage[-1]
@@ -195,6 +207,22 @@ class MainWindow(QWidget):
             )
 
             self.dashboard.update_dashboard(
+
+            from datetime import datetime
+
+            self.dashboard.update_statistics(
+
+                installed=len(
+                    debloat_apps
+                ),
+
+                recommended=recommended,
+
+                last_action=datetime.now().strftime(
+                    "%H:%M:%S"
+                ),
+
+            )
 
                 device_text=device_text,
 
@@ -258,6 +286,16 @@ class MainWindow(QWidget):
 
             )
 
+            self.dashboard.update_statistics(
+
+                installed=0,
+
+                recommended=0,
+
+                last_action="-",
+
+            )
+
     def preview_debloat(self):
 
         apps = self.debloat.selected_apps()
@@ -266,19 +304,26 @@ class MainWindow(QWidget):
 
         self.debloat.show_preview(commands)
 
-    def execute_debloat(self):
+    def _execute_apps(self, apps, title):
 
-        apps = self.debloat.selected_apps()
+        if not apps:
+            return
 
-        if not ConfirmationDialog.confirm(self, apps):
+        if not ConfirmationDialog.confirm(
+            self,
+            apps,
+        ):
             return
 
         progress = ProgressDialog(self)
+
         progress.show()
 
         self.repaint()
 
-        tx_id, results = self.debloat_controller.execute(apps)
+        tx_id, results = self.debloat_controller.execute(
+            apps
+        )
 
         progress.finish()
         progress.close()
@@ -286,27 +331,62 @@ class MainWindow(QWidget):
         if tx_id is None:
             return
 
-        text = []
+        ok = 0
+        failed = 0
 
-        text.append(f"Transaction : {tx_id}")
-        text.append("")
+        lines = [
+
+            f"Transaction : {tx_id}",
+
+            "",
+
+        ]
 
         for item in results:
 
-            status = "OK" if item.success else "FAILED"
+            if item.success:
+                ok += 1
+            else:
+                failed += 1
 
-            text.append(
+            status = (
+                "OK"
+                if item.success
+                else "FAILED"
+            )
+
+            lines.append(
                 f"[{status}] {item.package}"
             )
 
-        dialog = ResultDialog(
-            "Debloat Result",
-            "\n".join(text),
-        )
+        lines.append("")
+        lines.append(f"Success : {ok}")
+        lines.append(f"Failed : {failed}")
 
-        dialog.exec()
+        ResultDialog(
+
+            title,
+
+            "\n".join(lines),
+
+        ).exec()
 
         self.history.refresh()
+
+        self.refresh_device()
+
+
+    def execute_debloat(self):
+
+        apps = self.debloat.selected_apps()
+
+        self._execute_apps(
+
+            apps,
+
+            "Debloat Result",
+
+        )
 
     def restore_transaction(self):
 
@@ -356,15 +436,25 @@ class MainWindow(QWidget):
 
         apps = self.debloat_controller.load()
 
-        selected = []
+        recommended = [
 
-        for app in apps:
+            app
 
-            if getattr(app, "recommended", False):
+            for app in apps
 
-                selected.append(app)
+            if getattr(
 
-        if not selected:
+                app,
+
+                "recommended",
+
+                False,
+
+            )
+
+        ]
+
+        if not recommended:
 
             ResultDialog(
 
@@ -376,70 +466,10 @@ class MainWindow(QWidget):
 
             return
 
-        if not ConfirmationDialog.confirm(
-            self,
-            selected,
-        ):
-            return
+        self._execute_apps(
 
-        progress = ProgressDialog(self)
-
-        progress.show()
-
-        self.repaint()
-
-        tx_id, results = self.debloat_controller.execute(
-            selected
-        )
-
-        progress.finish()
-
-        progress.close()
-
-        if tx_id is None:
-
-            return
-
-        ok = 0
-
-        failed = 0
-
-        lines = []
-
-        lines.append(
-            f"Transaction : {tx_id}"
-        )
-
-        lines.append("")
-
-        for item in results:
-
-            if item.success:
-
-                ok += 1
-
-            else:
-
-                failed += 1
-
-            status = "OK" if item.success else "FAILED"
-
-            lines.append(
-                f"[{status}] {item.package}"
-            )
-
-        lines.append("")
-        lines.append(f"Success : {ok}")
-        lines.append(f"Failed : {failed}")
-
-        ResultDialog(
+            recommended,
 
             "Quick Optimize",
 
-            "\n".join(lines),
-
-        ).exec()
-
-        self.history.refresh()
-
-        self.refresh_device()
+        )
