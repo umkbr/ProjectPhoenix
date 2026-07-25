@@ -1,5 +1,6 @@
 from phoenix.executor.command_builder import CommandBuilder
 from phoenix.executor.adb_executor import ADBExecutor
+from phoenix.utils.logger import logger
 
 
 class RestoreManager:
@@ -28,6 +29,14 @@ class RestoreManager:
 
         commands = self.restore()
 
-        return self.executor.run_many(
-            commands
-        )
+        try:
+
+            return self.executor.run_many(
+                commands
+            )
+
+        except Exception as e:
+
+            logger.exception(e)
+
+            raise

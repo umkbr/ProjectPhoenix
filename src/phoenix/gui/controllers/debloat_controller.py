@@ -1,7 +1,7 @@
 from phoenix.inventory.inventory_engine import InventoryEngine
 from phoenix.debloat.debloat_engine import DebloatEngine
 from phoenix.history.transaction_manager import TransactionManager
-
+from phoenix.utils.logger import logger
 
 class DebloatController:
 
@@ -26,7 +26,15 @@ class DebloatController:
         if not apps:
             return None, []
 
-        results = self.engine.execute(apps)
+        try:
+
+            result = self.engine.execute(apps)
+
+        except Exception as e:
+
+            logger.exception(e)
+
+            raise
 
         transaction_id = self.history.save(results)
 
