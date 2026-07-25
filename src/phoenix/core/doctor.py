@@ -1,9 +1,13 @@
 import platform
 import shutil
-import subprocess
+
+from phoenix.core.adb_client import ADBClient
 
 
 class PhoenixDoctor:
+
+    def __init__(self, adb_client=None):
+        self.adb = adb_client or ADBClient()
 
     def check_python(self):
         return platform.python_version()
@@ -12,7 +16,7 @@ class PhoenixDoctor:
         return shutil.which("git") is not None
 
     def check_adb(self):
-        return shutil.which("adb") is not None
+        return self.adb.is_available()
 
     def check_fastboot(self):
         return shutil.which("fastboot") is not None
@@ -22,18 +26,10 @@ class PhoenixDoctor:
             return None
 
         try:
-            result = subprocess.run(
-                ["adb", "devices"],
-                capture_output=True,
-                text=True,
-                timeout=5
-            )
+            devices = self.adb.devices()
 
-            lines = result.stdout.splitlines()
-
-            for line in lines:
-                if "\tdevice" in line:
-                    return line.split()[0]
+            if devices:
+                return devices[0]
 
         except Exception:
             return None
