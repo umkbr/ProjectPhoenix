@@ -3,6 +3,7 @@ from phoenix.debloat.debloat_engine import DebloatEngine
 from phoenix.history.transaction_manager import TransactionManager
 from phoenix.utils.logger import logger
 
+
 class DebloatController:
 
     def __init__(self):
@@ -28,7 +29,7 @@ class DebloatController:
 
         try:
 
-            result = self.engine.execute(apps)
+            results = self.engine.execute(apps)
 
         except Exception as e:
 

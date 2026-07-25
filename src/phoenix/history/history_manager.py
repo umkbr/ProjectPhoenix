@@ -1,7 +1,15 @@
 import json
-
-from pathlib import Path
+from dataclasses import dataclass
 from datetime import datetime
+from pathlib import Path
+
+from phoenix.models.execution_result import ExecutionResult
+
+
+@dataclass
+class HistoryTransaction:
+    id: str
+    results: list[ExecutionResult]
 
 
 class HistoryManager:
@@ -20,9 +28,18 @@ class HistoryManager:
 
         file = self.folder / f"{tx}.json"
 
-        with open(file, "w") as f:
+        data = [
+            {
+                "package": item.package,
+                "command": item.command,
+                "success": item.success,
+                "message": item.message,
+            }
+            for item in results
+        ]
 
-            json.dump(results, f, indent=4)
+        with open(file, "w", encoding="utf-8") as handle:
+            json.dump(data, handle, indent=4)
 
         return tx
 
@@ -38,9 +55,8 @@ class HistoryManager:
 
         ):
 
-            with open(file) as f:
-
-                data = json.load(f)
+            with open(file, encoding="utf-8") as handle:
+                data = json.load(handle)
 
             items.append(
 
@@ -65,3 +81,28 @@ class HistoryManager:
             )
 
         return items
+
+    def load(self, transaction_id):
+
+        file = self.folder / f"{transaction_id}.json"
+
+        if not file.is_file():
+            return None
+
+        with open(file, encoding="utf-8") as handle:
+            data = json.load(handle)
+
+        results = [
+            ExecutionResult(
+                package=item["package"],
+                command=item["command"],
+                success=item["success"],
+                message=item["message"],
+            )
+            for item in data
+        ]
+
+        return HistoryTransaction(
+            id=transaction_id,
+            results=results,
+        )

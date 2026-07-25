@@ -13,7 +13,7 @@ class RestoreManager:
 
     def restore(self):
 
-        packages = self.backup.load()
+        packages = self._packages()
 
         commands = []
 
@@ -24,6 +24,18 @@ class RestoreManager:
             )
 
         return commands
+
+    def _packages(self):
+
+        if hasattr(self.backup, "load"):
+            packages = self.backup.load()
+        else:
+            packages = self.backup.results
+
+        return [
+            package.package if hasattr(package, "package") else package
+            for package in packages
+        ]
 
     def execute(self):
 

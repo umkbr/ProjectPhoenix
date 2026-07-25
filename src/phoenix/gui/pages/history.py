@@ -40,7 +40,7 @@ class HistoryPage(QWidget):
 
         for tx in self.manager.list():
 
-            self.transactions.addItem(tx)
+            self.transactions.addItem(tx["id"])
 
     def load_transaction(self, tx_id):
 
