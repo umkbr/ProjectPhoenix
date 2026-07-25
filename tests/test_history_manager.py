@@ -42,3 +42,20 @@ def test_load_returns_transaction_results(tmp_path):
 
     assert loaded.id == tx_id
     assert loaded.results[0].package == "com.test.app"
+
+
+def test_history_manager_save_preserves_transaction_json_format(tmp_path):
+
+    history = HistoryManager(tmp_path)
+    tx_id = history.save([
+        ExecutionResult(
+            package="com.test.app",
+            success=True,
+            message="OK",
+            command="pm disable-user com.test.app",
+        )
+    ])
+
+    loaded = history.load(tx_id)
+
+    assert loaded.results[0].command == "pm disable-user com.test.app"
